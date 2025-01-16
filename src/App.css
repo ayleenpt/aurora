@@ -1,14 +1,9 @@
 .App {
   width: 100vw;
   height: 100vh;
-  background-color: #0a0020;
+  background: url(./Background.png) no-repeat center center fixed;
   position: relative;
   overflow: hidden;
-}
-
-.background {
-  transition: all 1s ease;
-  animation: float 5s ease-in-out infinite;
 }
 
 .star {

@@ -32,7 +32,11 @@ function App() {
     const starGenerator = generateStars(starCount);
     const starArray = [];
     for (let star of starGenerator) {
-      starArray.push(star);
+      starArray.push({
+        ...star,
+        originalPosition: { left: star.left, top: star.top },
+        isFleeing: false, // Track whether a star is moving away
+      });
     }
     setStars(starArray);
   }, [starCount]);
@@ -86,24 +90,55 @@ function App() {
     const starYInPixels = (starY / 100) * window.innerHeight;
 
     const distance = calculateDistance(starXInPixels, starYInPixels, mousePosition.x, mousePosition.y);
-    
-    if (distance <= 100) {
+
+    if (distance <= 100 && !star.isFleeing) {
+      // Star is near the mouse, start the "fleeing" animation
       const { newStarX, newStarY } = moveStarAway(starXInPixels, starYInPixels, mousePosition.x, mousePosition.y);
 
       const newStarLeft = (newStarX / window.innerWidth) * 100;
       const newStarTop = (newStarY / window.innerHeight) * 100;
 
-      return { left: `${newStarLeft}%`, top: `${newStarTop}%` };
+      return {
+        left: `${newStarLeft}%`,
+        top: `${newStarTop}%`,
+        isFleeing: true, // Mark star as fleeing
+      };
     }
 
-    return { left: star.left, top: star.top };
+    // Star should return to its original position
+    return {
+      left: star.originalPosition.left,
+      top: star.originalPosition.top,
+      isFleeing: false, // Mark star as not fleeing
+    };
   }, [calculateDistance, moveStarAway, mousePosition]);
+
+  // Continuously check for stars that are fleeing and return them to their original positions
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setStars((prevStars) =>
+        prevStars.map((star) => {
+          if (star.isFleeing) {
+            // If the star is fleeing, immediately return it to its original position
+            return {
+              ...star,
+              left: star.originalPosition.left,
+              top: star.originalPosition.top,
+              isFleeing: false,
+            };
+          }
+          return star;
+        })
+      );
+    }, 100); // Check every 100ms
+
+    return () => clearInterval(interval); // Clean up the interval on component unmount
+  }, []);
 
   return (
     <div className="App">
-      <img src={Background} alt="background" className="background" />
       {stars.map((star, index) => {
-        const { left, top } = getStarPosition(star);
+        const { left, top, isFleeing } = getStarPosition(star);
 
         return (
           <div
@@ -115,7 +150,7 @@ function App() {
               height: star.size,
               opacity: star.opacity,
               backgroundColor: star.color,
-              transition: 'left 0.7s ease, top 0.7s ease',
+              transition: 'left 1s ease, top 1s ease',
               left: left,
               top: top,
             }}
