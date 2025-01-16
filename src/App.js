@@ -133,7 +133,7 @@ function App() {
   return (
     <div className="App">
       {stars.map((star, index) => {
-        const { left, top, isFleeing } = getStarPosition(star);
+        const { left, top } = getStarPosition(star);
 
         return (
           <div
