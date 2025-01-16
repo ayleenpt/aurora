@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import Background from './Background.png';
 import './App.css';
 
 function* generateStars(starCount) {
@@ -38,7 +39,6 @@ function App() {
 
   const handleMouseMove = useCallback(
     (event) => {
-      // Throttle mouse movement using requestAnimationFrame
       requestAnimationFrame(() => {
         setMousePosition({
           x: event.clientX,
@@ -101,6 +101,7 @@ function App() {
 
   return (
     <div className="App">
+      <img src={Background} alt="background" className="background" />
       {stars.map((star, index) => {
         const { left, top } = getStarPosition(star);
 
@@ -109,14 +110,14 @@ function App() {
             key={index}
             className="star"
             style={{
-              top: top,
-              left: left,
-              animationDuration: star.animationDuration,
+              position: 'absolute',
               width: star.size,
               height: star.size,
               opacity: star.opacity,
               backgroundColor: star.color,
-              transition: 'top 0.6s ease, left 0.6s ease',
+              transition: 'left 0.7s ease, top 0.7s ease',
+              left: left,
+              top: top,
             }}
           ></div>
         );
