@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import './App.css';
 
 function* generateStars(starCount) {
@@ -22,10 +22,10 @@ function* generateStars(starCount) {
 }
 
 function App() {
-  const starCount = 5000;
   const [stars, setStars] = useState([]);
-  
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+
+  const starCount = window.innerWidth * window.innerHeight / 260;
 
   useEffect(() => {
     const starGenerator = generateStars(starCount);
@@ -36,28 +36,33 @@ function App() {
     setStars(starArray);
   }, [starCount]);
 
-  const handleMouseMove = (event) => {
-    setMousePosition({
-      x: event.clientX,
-      y: event.clientY,
-    });
-  };
+  const handleMouseMove = useCallback(
+    (event) => {
+      // Throttle mouse movement using requestAnimationFrame
+      requestAnimationFrame(() => {
+        setMousePosition({
+          x: event.clientX,
+          y: event.clientY,
+        });
+      });
+    },
+    []
+  );
 
   useEffect(() => {
     window.addEventListener('mousemove', handleMouseMove);
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
     };
-  }, []);
+  }, [handleMouseMove]);
 
-  const calculateDistance = (starX, starY, mouseX, mouseY) => {
+  const calculateDistance = useCallback((starX, starY, mouseX, mouseY) => {
     const dx = starX - mouseX;
     const dy = starY - mouseY;
     return Math.sqrt(dx * dx + dy * dy); // Euclidean distance
-  };
+  }, []);
 
-  // Move a star away from the mouse by a random distance between 5 and 75 pixels
-  const moveStarAway = (starX, starY, mouseX, mouseY) => {
+  const moveStarAway = useCallback((starX, starY, mouseX, mouseY) => {
     const dx = starX - mouseX;
     const dy = starY - mouseY;
     const distance = Math.sqrt(dx * dx + dy * dy);
@@ -71,10 +76,9 @@ function App() {
     const newStarY = starY + directionY * randomDistance;
 
     return { newStarX, newStarY };
-  };
+  }, []);
 
-  // Determine if a star is within 100px of the mouse and move it if needed
-  const getStarPosition = (star) => {
+  const getStarPosition = useCallback((star) => {
     const starX = parseFloat(star.left);
     const starY = parseFloat(star.top);
 
@@ -92,9 +96,8 @@ function App() {
       return { left: `${newStarLeft}%`, top: `${newStarTop}%` };
     }
 
-    // Return original position if not near the mouse
     return { left: star.left, top: star.top };
-  };
+  }, [calculateDistance, moveStarAway, mousePosition]);
 
   return (
     <div className="App">
