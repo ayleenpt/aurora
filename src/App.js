@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import Background from './Background.png';
 import './App.css';
 
 function* generateStars(starCount) {
@@ -35,7 +34,7 @@ function App() {
       starArray.push({
         ...star,
         originalPosition: { left: star.left, top: star.top },
-        isFleeing: false, // Track whether a star is moving away
+        isFleeing: false,
       });
     }
     setStars(starArray);
@@ -63,7 +62,7 @@ function App() {
   const calculateDistance = useCallback((starX, starY, mouseX, mouseY) => {
     const dx = starX - mouseX;
     const dy = starY - mouseY;
-    return Math.sqrt(dx * dx + dy * dy); // Euclidean distance
+    return Math.sqrt(dx * dx + dy * dy);
   }, []);
 
   const moveStarAway = useCallback((starX, starY, mouseX, mouseY) => {
@@ -92,7 +91,6 @@ function App() {
     const distance = calculateDistance(starXInPixels, starYInPixels, mousePosition.x, mousePosition.y);
 
     if (distance <= 100 && !star.isFleeing) {
-      // Star is near the mouse, start the "fleeing" animation
       const { newStarX, newStarY } = moveStarAway(starXInPixels, starYInPixels, mousePosition.x, mousePosition.y);
 
       const newStarLeft = (newStarX / window.innerWidth) * 100;
@@ -101,25 +99,22 @@ function App() {
       return {
         left: `${newStarLeft}%`,
         top: `${newStarTop}%`,
-        isFleeing: true, // Mark star as fleeing
+        isFleeing: true,
       };
     }
 
-    // Star should return to its original position
     return {
       left: star.originalPosition.left,
       top: star.originalPosition.top,
-      isFleeing: false, // Mark star as not fleeing
+      isFleeing: false,
     };
   }, [calculateDistance, moveStarAway, mousePosition]);
 
-  // Continuously check for stars that are fleeing and return them to their original positions
   useEffect(() => {
     const interval = setInterval(() => {
       setStars((prevStars) =>
         prevStars.map((star) => {
           if (star.isFleeing) {
-            // If the star is fleeing, immediately return it to its original position
             return {
               ...star,
               left: star.originalPosition.left,
@@ -130,9 +125,9 @@ function App() {
           return star;
         })
       );
-    }, 100); // Check every 100ms
+    }, 100);
 
-    return () => clearInterval(interval); // Clean up the interval on component unmount
+    return () => clearInterval(interval);
   }, []);
 
   return (
