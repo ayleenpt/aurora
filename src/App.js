@@ -1,22 +1,23 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import './App.css';
 
+// Import the star GIFs
+import starOne from './assets/star_one.gif';
+import starTwo from './assets/star_two.gif';
+import starThree from './assets/star_three.gif';
+
 function* generateStars(starCount) {
-  const getRandomPaleColor = () => {
-    const r = Math.floor(Math.random() * 80 + 170);
-    const g = Math.floor(Math.random() * 80 + 170);
-    const b = Math.floor(Math.random() * 80 + 170);
-    return `rgb(${r}, ${g}, ${b})`;
-  };
+  const starGifs = [starOne, starTwo, starThree]; // Array of GIFs
 
   for (let i = 0; i < starCount; i++) {
+    const randomGif = starGifs[Math.floor(Math.random() * starGifs.length)]; // Pick a random GIF
     yield {
       top: `${Math.random() * 100}vh`, // Random vertical position
       left: `${Math.random() * 100}vw`, // Random horizontal position
-      animationDuration: `${Math.random() * 5 + 3}s`, // Random animation duration (3-8 seconds)
-      size: `${Math.random() * 2 + 1}px`, // Random size (between 1px and 3px)
-      opacity: `${Math.random() * 0.7 + 0.3}`, // Random opacity (between 30% and 100%)
-      color: getRandomPaleColor(),
+      size: `${Math.random() * 3 + 1}px`, // Random size (between 1px and 4px)
+      opacity: `${Math.random() * 0.6 + 0.4}`, // Random opacity (between 40% and 100%)
+      filter: `brightness(${Math.random() * 4 + 4})`, // Random brightness (between 4 and 8)
+      backgroundImage: `url(${randomGif})`, // Set the random GIF as the background
     };
   }
 }
@@ -144,7 +145,9 @@ function App() {
               width: star.size,
               height: star.size,
               opacity: star.opacity,
-              backgroundColor: star.color,
+              filter: star.filter,
+              backgroundImage: star.backgroundImage, // Use the randomly selected GIF
+              backgroundSize: 'cover', // Optional: ensure GIF fills the div
               transition: 'left 1s ease, top 1s ease',
               left: left,
               top: top,
