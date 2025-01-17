@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/aurora/static/css/main.a44d866b.css",
+    "main.css": "/aurora/static/css/main.4bf37f58.css",
     "main.js": "/aurora/static/js/main.b0fbe3eb.js",
     "static/js/488.8701d7e3.chunk.js": "/aurora/static/js/488.8701d7e3.chunk.js",
     "static/media/Background.png": "/aurora/static/media/Background.6c6763050e1a5f36b0fb.png",
@@ -8,12 +8,12 @@
     "static/media/star_two.gif": "/aurora/static/media/star_two.5aaabc942de8f3192c2b.gif",
     "static/media/star_three.gif": "/aurora/static/media/star_three.3e9c6fb3810e08a9f046.gif",
     "index.html": "/aurora/index.html",
-    "main.a44d866b.css.map": "/aurora/static/css/main.a44d866b.css.map",
+    "main.4bf37f58.css.map": "/aurora/static/css/main.4bf37f58.css.map",
     "main.b0fbe3eb.js.map": "/aurora/static/js/main.b0fbe3eb.js.map",
     "488.8701d7e3.chunk.js.map": "/aurora/static/js/488.8701d7e3.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.a44d866b.css",
+    "static/css/main.4bf37f58.css",
     "static/js/main.b0fbe3eb.js"
   ]
 }
